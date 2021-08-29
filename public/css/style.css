@@ -1,0 +1,21 @@
+.navbar {
+  background-color: #95d1d1 !important;
+}
+.input-group-text {
+  color: #95d1d1 !important;
+}
+.input-group .btn {
+  background-color: #ffffff !important;
+  color: #95d1d1 !important;
+}
+.card .btn {
+  background-color: #95d1d1 !important;
+  color: #ffffff;
+}
+.blockquote p {
+  color: #95d1d1;
+  font-size: larger;
+}
+.sign {
+  color: #95d1d1;
+}
