@@ -4,12 +4,10 @@ const compression = require('compression');
 const helmet = require('helmet');
 const hbs = require('hbs');
 const cookieParser = require('cookie-parser');
-const { userRequest, taskRequest } = require('./router/api');
-const { Z_VERSION_ERROR } = require('zlib');
-const API_URL = process.env.API_URL;
+const { userRequest } = require('./router/api');
 
 // const userRouter = require('./router/user');
-// const taskRouter = require('./router/task');
+const taskRouter = require('./router/task');
 
 const app = express();
 
@@ -28,6 +26,8 @@ app.use(cookieParser());
 app.use(compression());
 app.use(helmet());
 app.use(express.json());
+
+app.use('/tasks', taskRouter);
 
 app.get('', (req, res) => {
   res.render('index', {
@@ -64,25 +64,5 @@ app.get('/todo', (req, res) => {
     title: 'todo',
   });
 });
-
-app.get('/tasks', async (req, res) => {
-  try {
-    const result = await taskRequest.get('', {
-      headers: {
-        Authorization: 'Bearer ' + req.cookies.token,
-      },
-    });
-    result.data.forEach((i) => {
-      delete i.owner;
-      delete i.__v;
-      delete i.createdAt;
-    });
-    res.send(result.data);
-  } catch (err) {
-    res.send('error');
-  }
-});
 // app.use('/users', userRouter);
-// app.use('/tasks', taskRouter);
-
 module.exports = app;
