@@ -11,31 +11,45 @@ filterOption.addEventListener('click', filterTodo);
 
 function addTodo(event) {
   event.preventDefault();
-  //todo DIV
-  const todoDiv = document.createElement('div');
-  todoDiv.classList.add('todo');
-  //todo LI
-  const newTodo = document.createElement('li');
-  newTodo.innerText = todoInput.value;
-  newTodo.classList.add('todo_item');
-  todoDiv.appendChild(newTodo);
-  if (todoInput.value === '') {
-    return null;
-  }
-  //check mark BUTTON
-  const completedButton = document.createElement('button');
-  completedButton.innerHTML = '<i class="fas fa-check"></i>';
-  completedButton.classList.add('complete_btn');
-  todoDiv.appendChild(completedButton);
-  //delete BUTTON
-  const deleteButton = document.createElement('button');
-  deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
-  deleteButton.classList.add('delete_btn');
-  todoDiv.appendChild(deleteButton);
-  //Append to Actual LIST
-  todoList.appendChild(todoDiv);
-  //Clear todo input VALUE
-  todoInput.value = '';
+  fetch('./tasks', {
+    method: 'post',
+    headers: {
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({ description: todoInput.value, completed: false }),
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((res) => {
+      //todo DIV
+      const todoDiv = document.createElement('div');
+      todoDiv.classList.add('todo');
+      todoDiv.setAttribute('id', res._id);
+      todoDiv.setAttribute('data_completed', res.completed);
+      //todo LI
+      const newTodo = document.createElement('li');
+      newTodo.innerText = todoInput.value;
+      newTodo.classList.add('todo_item');
+      todoDiv.appendChild(newTodo);
+      if (todoInput.value === '') {
+        return null;
+      }
+      //check mark BUTTON
+      const completedButton = document.createElement('button');
+      completedButton.innerHTML = '<i class="fas fa-check"></i>';
+      completedButton.classList.add('complete_btn');
+      todoDiv.appendChild(completedButton);
+      //delete BUTTON
+      const deleteButton = document.createElement('button');
+      deleteButton.innerHTML = '<i class="fas fa-trash"></i>';
+      deleteButton.classList.add('delete_btn');
+      todoDiv.appendChild(deleteButton);
+      //Append to Actual LIST
+      todoList.appendChild(todoDiv);
+      //Clear todo input VALUE
+      todoInput.value = '';
+    });
 }
 //DELETE & CHECK
 function deleteCheck(e) {
@@ -110,7 +124,6 @@ function filterTodo(e) {
     }
   }
 }
-var tt;
 fetch('./tasks', {
   method: 'get',
   headers: {
@@ -145,6 +158,4 @@ fetch('./tasks', {
       //Append to Actual LIST
       todoList.appendChild(todoDiv);
     });
-    tt = result;
-    // console.log(result);
   });

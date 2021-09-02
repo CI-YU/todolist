@@ -18,11 +18,36 @@ router.get('', async (req, res) => {
     res.send('error');
   }
 });
+router.post('', async (req, res) => {
+  try {
+    const result = await taskRequest.post(
+      '',
+      {
+        description: req.body.description,
+        completed: req.body.completed,
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + req.cookies.token,
+        },
+      }
+    );
+    // result.data.forEach((i) => {
+    //   delete i.owner;
+    //   delete i.__v;
+    //   delete i.createdAt;
+    // });
+    delete result.data.owner;
+    delete result.data.__v;
+    delete result.data.createdAt;
+    console.log(result.data);
+    res.send(result.data);
+  } catch (err) {
+    res.send('error');
+  }
+});
 router.patch('/:id', async (req, res) => {
   try {
-    //console.log(req.cookies.token);
-    console.log(req.params.id);
-    console.log(req.body.completed);
     const result = await taskRequest.patch(
       `/${req.params.id}`,
       {
@@ -32,8 +57,7 @@ router.patch('/:id', async (req, res) => {
     );
     res.sendStatus(result.status);
   } catch (err) {
-    // console.log(err);
-    res.send('error');
+    res.send(err.response.data.message);
   }
 });
 
@@ -44,7 +68,7 @@ router.delete('/:id', async (req, res) => {
     });
     res.sendStatus(result.status);
   } catch (err) {
-    res.send('error');
+    res.send(err.response.data.message);
   }
 });
 module.exports = router;
