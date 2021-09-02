@@ -30,8 +30,7 @@ router.patch('/:id', async (req, res) => {
       },
       { headers: { Authorization: 'Bearer ' + req.cookies.token } }
     );
-    console.log(result.status);
-    res.send(result.status);
+    res.sendStatus(result.status);
   } catch (err) {
     // console.log(err);
     res.send('error');

@@ -56,7 +56,6 @@ function deleteCheck(e) {
         return res.text();
       })
       .then((res) => {
-        console.log(res);
         if (res === 'OK') {
           //ANIMATION TRANSITION
           todo.classList.add('fall');
