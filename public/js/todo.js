@@ -37,9 +37,11 @@ function addTodo(event) {
   //Clear todo input VALUE
   todoInput.value = '';
 }
-
 //DELETE & CHECK
 function deleteCheck(e) {
+  const completed =
+    e.target.parentElement.getAttribute('data_completed') !== 'true';
+  console.log(completed);
   const id = e.target.parentElement.id;
   const item = e.target;
   //DELETE ITEM
@@ -53,12 +55,19 @@ function deleteCheck(e) {
   }
   //COMPLETE ITEM
   if (item.classList[0] === 'complete_btn') {
-    // fetch(`./tasks/${id}`, {
-    //   method: 'patch',
-    //   headers: {
-    //     'content-type': 'application/json',
-    //   },
-    // });
+    fetch(`./tasks/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({ completed }),
+    })
+      .then((res) => {
+        return res.text();
+      })
+      .then((res) => {
+        console.log(res);
+      });
     const todo = item.parentElement;
     todo.classList.toggle('completedItem');
   }
@@ -102,11 +111,12 @@ fetch('./tasks', {
     result.forEach((element) => {
       //todo DIV
       const todoDiv = document.createElement('div');
-      todoDiv.classList.add('todo');
+      todoDiv.classList.add('todo', element.completed ? 'completedItem' : null);
       todoDiv.setAttribute('id', element._id);
+      todoDiv.setAttribute('data_completed', element.completed);
       //todo LI
       const newTodo = document.createElement('li');
-      newTodo.innerText = element.description; //todoInput.value;
+      newTodo.innerText = element.description;
       newTodo.classList.add('todo_item');
       todoDiv.appendChild(newTodo);
       //check mark BUTTON
