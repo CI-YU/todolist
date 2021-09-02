@@ -41,17 +41,30 @@ function addTodo(event) {
 function deleteCheck(e) {
   const completed =
     e.target.parentElement.getAttribute('data_completed') !== 'true';
-  console.log(completed);
   const id = e.target.parentElement.id;
   const item = e.target;
   //DELETE ITEM
   if (item.classList[0] === 'delete_btn') {
     const todo = item.parentElement;
-    //ANIMATION TRANSITION
-    todo.classList.add('fall');
-    todo.addEventListener('transitionend', function () {
-      todo.remove();
-    });
+    fetch(`./tasks/${id}`, {
+      method: 'delete',
+      headers: {
+        'content-type': 'application/json',
+      },
+    })
+      .then((res) => {
+        return res.text();
+      })
+      .then((res) => {
+        console.log(res);
+        if (res === 'OK') {
+          //ANIMATION TRANSITION
+          todo.classList.add('fall');
+          todo.addEventListener('transitionend', function () {
+            todo.remove();
+          });
+        }
+      });
   }
   //COMPLETE ITEM
   if (item.classList[0] === 'complete_btn') {
@@ -66,10 +79,11 @@ function deleteCheck(e) {
         return res.text();
       })
       .then((res) => {
-        console.log(res);
+        if (res === 'OK') {
+          const todo = item.parentElement;
+          todo.classList.toggle('completedItem');
+        }
       });
-    const todo = item.parentElement;
-    todo.classList.toggle('completedItem');
   }
 }
 //FILTERING THE TASKS ACCORDING THE OPTION
@@ -133,6 +147,5 @@ fetch('./tasks', {
       todoList.appendChild(todoDiv);
     });
     tt = result;
-    console.log(result);
-    //alert(result);
+    // console.log(result);
   });

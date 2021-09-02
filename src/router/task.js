@@ -30,10 +30,21 @@ router.patch('/:id', async (req, res) => {
       },
       { headers: { Authorization: 'Bearer ' + req.cookies.token } }
     );
-    // console.log(result);
-    res.send('success');
+    console.log(result.status);
+    res.send(result.status);
   } catch (err) {
     // console.log(err);
+    res.send('error');
+  }
+});
+
+router.delete('/:id', async (req, res) => {
+  try {
+    const result = await taskRequest.delete(`/${req.params.id}`, {
+      headers: { Authorization: 'Bearer ' + req.cookies.token },
+    });
+    res.sendStatus(result.status);
+  } catch (err) {
     res.send('error');
   }
 });
