@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const hbs = require('hbs');
 const cookieParser = require('cookie-parser');
 const { userRequest, taskRequest } = require('./router/api');
+const { Z_VERSION_ERROR } = require('zlib');
 const API_URL = process.env.API_URL;
 
 // const userRouter = require('./router/user');
@@ -57,6 +58,29 @@ app.get('/signin', (req, res) => {
   res.render('signin', {
     title: 'signin',
   });
+});
+app.get('/todo', (req, res) => {
+  res.render('todo', {
+    title: 'todo',
+  });
+});
+
+app.get('/tasks', async (req, res) => {
+  try {
+    const result = await taskRequest.get('', {
+      headers: {
+        Authorization: 'Bearer ' + req.cookies.token,
+      },
+    });
+    result.data.forEach((i) => {
+      delete i.owner;
+      delete i.__v;
+      delete i.createdAt;
+    });
+    res.send(result.data);
+  } catch (err) {
+    res.send('error');
+  }
 });
 // app.use('/users', userRouter);
 // app.use('/tasks', taskRouter);

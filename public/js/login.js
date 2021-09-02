@@ -21,6 +21,7 @@ document.querySelector('#login').addEventListener('click', () => {
       return res.text();
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
+      alert(result);
     });
 });
