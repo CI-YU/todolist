@@ -28,7 +28,7 @@ app.use(helmet());
 app.use(express.json());
 
 app.use('/tasks', taskRouter);
-
+// app.use('/users', userRouter);
 app.get('', (req, res) => {
   res.render('index', {
     title: 'Index',
@@ -59,10 +59,31 @@ app.get('/signin', (req, res) => {
     title: 'signin',
   });
 });
+
+app.post('/users', async (req, res) => {
+  try {
+    const result = await userRequest.post(
+      '',
+      {
+        name: req.body.name,
+        email: req.body.account,
+        password: req.body.password,
+      },
+      {
+        headers: {
+          Authorization: 'Bearer ' + req.cookies.token,
+        },
+      }
+    );
+    res.send('sucess');
+  } catch (err) {
+    res.send('error');
+  }
+});
+
 app.get('/todo', (req, res) => {
   res.render('todo', {
     title: 'todo',
   });
 });
-// app.use('/users', userRouter);
 module.exports = app;
