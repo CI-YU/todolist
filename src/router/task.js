@@ -32,11 +32,6 @@ router.post('', async (req, res) => {
         },
       }
     );
-    // result.data.forEach((i) => {
-    //   delete i.owner;
-    //   delete i.__v;
-    //   delete i.createdAt;
-    // });
     delete result.data.owner;
     delete result.data.__v;
     delete result.data.createdAt;
