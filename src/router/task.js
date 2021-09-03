@@ -35,7 +35,6 @@ router.post('', async (req, res) => {
     delete result.data.owner;
     delete result.data.__v;
     delete result.data.createdAt;
-    console.log(result.data);
     res.send(result.data);
   } catch (err) {
     res.send('error');
